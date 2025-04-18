@@ -62,8 +62,6 @@ export class ClientDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   async ngOnInit() {
-
-
     try {
       this.promoters = await lastValueFrom(this.promoterService.getActive());
       if (!this.isEdit && this.promoters.length > 0) this.clientForm.get('idPromotor')!.setValue(this.promoters[0].idPromotor);
