@@ -64,7 +64,7 @@ export class RulingDetailComponent implements OnInit, OnDestroy {
       fDictamen: new FormControl(new Date(), [Validators.required, Validators.maxLength(100)]),
       idFuncionario: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       idEjecutivo: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-      observaciones: new FormControl('', [Validators.required, Validators.maxLength(255)])
+      observaciones: new FormControl('', [Validators.maxLength(255)])
     });
 
     if (this.id) {
@@ -137,7 +137,11 @@ export class RulingDetailComponent implements OnInit, OnDestroy {
     this.requests = [];
     if (!this.rulingForm.get('idCliente')!.value) return;
     try {
-      this.requests = await lastValueFrom(this.rulingService.getListByClient(this.rulingForm.get('idCliente')!.value));
+      if (this.isEdit) {
+        this.requests = await lastValueFrom(this.rulingService.getListByClient(this.rulingForm.get('idCliente')!.value));
+      } else {
+        this.requests = await lastValueFrom(this.rulingService.getListPendingByClient(this.rulingForm.get('idCliente')!.value));
+      }
       if (this.requests.length > 0) this.rulingForm.get('idLista')!.setValue(this.ruling.idLista || this.requests[0].idLista);
       if (this.id) this.updateSelectedList();
     } catch (error) {

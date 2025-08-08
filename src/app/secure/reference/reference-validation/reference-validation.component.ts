@@ -51,8 +51,18 @@ export class ReferenceValidationComponent implements OnInit, OnDestroy {
   }
 
   showConfirmDialog(newStatus: number): void {
+    let status = '';
+
+    switch(newStatus) {
+      case 3: status = 'cancelar';
+      break;
+      case 1: status = 'activar';
+      break;
+      default: status = 'validar';
+    }
+    
     this.dialog.open(ConfirmationDialogComponent, {
-      data: `¿Esta seguro que desea ${newStatus === 3 ? 'cancelar' : 'validar'} los folios seleccionados?`,
+      data: `¿Esta seguro que desea ${status} los folios seleccionados?`,
     })
       .afterClosed()
       .subscribe((confirmado: Boolean) => {

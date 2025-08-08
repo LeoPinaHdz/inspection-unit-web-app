@@ -25,7 +25,7 @@
               <mat-label>Pedimento</mat-label>
               <input matInput formControlName="pedimento" type="text" />
               <mat-error>
-                <error-message nomCampo="Pedimento"></error-message>
+                <error-message [control]="form.pedimento" nomCampo=""></error-message>
               </mat-error>
             </mat-form-field>
           </div>

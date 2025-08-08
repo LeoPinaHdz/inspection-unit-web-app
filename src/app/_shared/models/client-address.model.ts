@@ -15,4 +15,5 @@ export interface ClientAddress {
     fModificacion?: string;
     idUsuario?: Number;
     idEstatus?: Number;
+    tipoDeposito?: Number;
 }

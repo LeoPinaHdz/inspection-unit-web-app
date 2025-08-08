@@ -51,6 +51,7 @@ export class ClientAddressComponent implements OnInit, OnChanges {
       cp: new FormControl('', [Validators.required]),
       idBodega: new FormControl(''),
       prioridad: new FormControl(false, [Validators.required]),
+      tipoDeposito: new FormControl('', [Validators.required]),
       active: new FormControl(false, [Validators.required])
     });
   }
@@ -127,18 +128,9 @@ export class ClientAddressComponent implements OnInit, OnChanges {
   }
 
   updateForm(clientAddress: ClientAddress): void {
+    this.clientAddressForm.patchValue(clientAddress);
     this.clientAddressForm.patchValue({
-      idLugar: clientAddress.idLugar,
-      idCliente: clientAddress.idCliente,
-      nombre: clientAddress.nombre,
-      calle: clientAddress.calle,
-      numero: clientAddress.numero,
-      colonia: clientAddress.colonia,
-      municipio: clientAddress.municipio,
-      idEstado: clientAddress.idEstado,
-      idPais: clientAddress.idPais,
-      cp: clientAddress.cp,
-      idBodega: clientAddress.idBodega,
+      tipoDeposito: `${clientAddress.tipoDeposito}`,
       prioridad: (clientAddress.prioridad && clientAddress.prioridad === 1) || false,
       active: (clientAddress.idEstatus && clientAddress.idEstatus === 1) || false
     });

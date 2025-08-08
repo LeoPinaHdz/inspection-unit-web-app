@@ -38,6 +38,7 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
   filteredClients: ReplaySubject<Client[]> = new ReplaySubject<Client[]>(1);
   standards: any[] = [];
   addresses: any[] = [];
+  allAddresses: any[] = [];
   warehouses: any[] = [];
   templates: Template[] = [];
   displayedColumns: string[] = ['modelo', 'producto', 'cantidad', 'idUnidad', 'marca', 'pais', 'actions'];
@@ -72,7 +73,7 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
       clientFilter: new FormControl('', []),
       folio: new FormControl({ value: '', disabled: true }),
       idNorma: new FormControl({ value: '', disabled: this.id }, [Validators.required]),
-      pedimento: new FormControl({ value: '', disabled: true }),
+      pedimento: new FormControl({ value: '', disabled: true }, [Validators.maxLength(18)]),
       tipoServicio: new FormControl({ value: '0', disabled: true }, [Validators.required]),
       tipoRegimen: new FormControl('0', [Validators.required]),
       fSolicitud: new FormControl(new Date(), [Validators.required]),
@@ -272,21 +273,19 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
   }
 
   async loadAddresses() {
-    if (this.requestForm.get('tipoRegimen')!.value == 0) {
-      if (this.requestForm.get('idCliente')!.value && this.requestForm.get('idCliente')!.value !== '') {
-        try {
-          this.addresses = await lastValueFrom(this.clientAddressService.getAllActive(this.requestForm.get('idCliente')!.value));
-          this.addresses = this.requestForm.get('tipoRegimen')!.value == 0 ? this.addresses : this.warehouses;
-          const selected = this.id ? this.request.idLugar : this.addresses[0].idLugar;
-          this.requestForm.get('idLugar')!.setValue(selected);
-        } catch (error) {
-          console.error('Error trying to get addresses');
-        }
+    if (this.requestForm.get('idCliente')!.value && this.requestForm.get('idCliente')!.value !== '') {
+      try {
+        this.allAddresses = await lastValueFrom(this.clientAddressService.getAllActive(this.requestForm.get('idCliente')!.value));
+
+        const fiscal = this.allAddresses.filter((a) => a.tipoDeposito === 1 || a.tipoDeposito === 3);
+        const nacional = this.allAddresses.filter((a) => a.tipoDeposito === 2 || a.tipoDeposito === 3);
+
+        this.addresses = this.requestForm.get('tipoRegimen')!.value == 0 ? nacional : fiscal;
+        const selected = this.id ? this.request.idLugar : this.addresses[0].idLugar;
+        this.requestForm.get('idLugar')!.setValue(selected);
+      } catch (error) {
+        console.error('Error trying to get addresses');
       }
-    } else {
-      this.addresses = this.warehouses;
-      const selected = this.id ? this.request.idLugar : this.addresses[0].idLugar;
-      this.requestForm.get('idLugar')!.setValue(selected);
     }
   }
 
@@ -307,6 +306,7 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
     });
 
     if (this.request.tipoServicio) {
+      this.requestForm.get('pedimento')?.enable();
       this.requestForm.get('fSolicitud')?.disable();
       this.requestForm.get('fPrograma')?.disable();
     }

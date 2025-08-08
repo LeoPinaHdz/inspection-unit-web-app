@@ -13,6 +13,7 @@
                 <mat-radio-group formControlName="idEstatus">
                     <mat-radio-button class="example-margin" value="1">Pendientes</mat-radio-button>
                     <mat-radio-button class="example-margin" value="5">Validados</mat-radio-button>
+                    <mat-radio-button class="example-margin" value="3">Cancelados</mat-radio-button>
                 </mat-radio-group>
             </div>
             <div class="form-cell-3">
@@ -31,8 +32,11 @@
             <button *ngIf="currentStatus == 1" class="form-button no-left-margin" (click)="showConfirmDialog(5)" mat-fab extended>
                 Validar
             </button>
-            <button class="form-button no-left-margin" color="warn" (click)="showConfirmDialog(3)" mat-fab extended>
+            <button *ngIf="currentStatus != 3" class="form-button no-left-margin" color="warn" (click)="showConfirmDialog(3)" mat-fab extended>
                 Cancelar
+            </button>
+            <button *ngIf="currentStatus == 3" class="form-button no-left-margin" color="primary" (click)="showConfirmDialog(1)" mat-fab extended>
+                Activar
             </button>
         </div>
     </mat-card-content>

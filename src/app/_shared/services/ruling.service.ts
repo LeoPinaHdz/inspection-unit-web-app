@@ -17,6 +17,10 @@ export class RulingService {
     return this.http.get<List[]>(`${environment.url}Lista/GetByClient?id=${id}`);
   }
 
+  getListPendingByClient(id: number): Observable<List[]> {
+    return this.http.get<List[]>(`${environment.url}Lista/GetPendingByClient?id=${id}`);
+  }
+
   search(request: any): Observable<Ruling[]> {
     return this.http.post<Ruling[]>(`${environment.url}Dictamenes/Listado`, request);
   }

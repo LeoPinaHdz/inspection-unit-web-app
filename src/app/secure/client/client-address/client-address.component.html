@@ -110,6 +110,19 @@
           </mat-form-field>
         </div>
         <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+                <mat-label>Deposito</mat-label>
+                <mat-select formControlName="tipoDeposito" required>
+                    <mat-option value="1">Fiscal</mat-option>
+                    <mat-option value="2">Nacional</mat-option>
+                    <mat-option value="3">Ambos</mat-option>
+                </mat-select>
+                <mat-error>
+                    <error-message nomCampo="Deposito"></error-message>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-cell-2">
           <mat-checkbox formControlName="active" color="primary">Activo</mat-checkbox>
         </div>
       </div>
