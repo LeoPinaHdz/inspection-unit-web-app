@@ -119,13 +119,13 @@
           </div>
           <div class="form-cell-3">
             <mat-form-field appearance="outline">
-              <mat-label>Responsable</mat-label>
+              <mat-label>Ejecutivo Auxiliar</mat-label>
               <mat-select formControlName="idFuncionario" required>
-                <mat-option *ngFor="let official of officials"
-                  [value]="official.idFuncionario">{{official.nombre}}</mat-option>
+                <mat-option *ngFor="let executive of allExecutives"
+                  [value]="executive.idEjecutivo">{{executive.nombre}}</mat-option>
               </mat-select>
               <mat-error>
-                <error-message [control]="form.idFuncionario" nomCampo="Responsable"></error-message>
+                <error-message [control]="form.idFuncionario" nomCampo="Ejecutivo Auxiliar"></error-message>
               </mat-error>
             </mat-form-field>
           </div>

@@ -21,14 +21,14 @@
                         <mat-form-field appearance="outline">
                             <mat-label>Cliente</mat-label>
                             <mat-select formControlName="idCliente" placeholder="Cliente" #clientSelect>
-                              <mat-option>
-                                <ngx-mat-select-search placeholderLabel="Busca cliente"
-                                  noEntriesFoundLabel="No se encontraron resultados"
-                                  formControlName="clientFilter"></ngx-mat-select-search>
-                              </mat-option>
-                              <mat-option *ngFor="let client of filteredClients | async" [value]="client.idCliente">
-                                {{client.nombre}}
-                              </mat-option>
+                                <mat-option>
+                                    <ngx-mat-select-search placeholderLabel="Busca cliente"
+                                        noEntriesFoundLabel="No se encontraron resultados"
+                                        formControlName="clientFilter"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let client of filteredClients | async" [value]="client.idCliente">
+                                    {{client.nombre}}
+                                </mat-option>
                             </mat-select>
                             <mat-error>
                                 <error-message [control]="form.cliente" nomCampo="Cliente"></error-message>
@@ -40,7 +40,7 @@
                             <mat-label>Oficio</mat-label>
                             <mat-select formControlName="idOficio" required>
                                 <mat-option *ngFor="let letter of letters"
-                                    [value]="letter.idOficio">{{letter.folio}}</mat-option>
+                                    [value]="letter.idOficio">{{letter.idOficio}}</mat-option>
                             </mat-select>
                             <mat-error>
                                 <error-message [control]="form.idOficio" nomCampo="Oficio"></error-message>
@@ -142,6 +142,18 @@
                             <mat-error>
                                 <error-message [control]="form.estadoInstrumento"
                                     nomCampo="Estado del instrumento de medición"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-cell-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Inspector</mat-label>
+                            <mat-select formControlName="idEjecutivo" required>
+                                <mat-option *ngFor="let executive of allExecutives"
+                                    [value]="executive.idEjecutivo">{{executive.nombre}}</mat-option>
+                            </mat-select>
+                            <mat-error>
+                                <error-message [control]="form.idEjecutivo" nomCampo="Ejecutivo"></error-message>
                             </mat-error>
                         </mat-form-field>
                     </div>

@@ -107,6 +107,33 @@
               <mat-datepicker #fProgramaPicker></mat-datepicker>
             </mat-form-field>
           </div>
+
+          <div class="form-cell-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Signatario</mat-label>
+              <mat-select formControlName="idEjecutivo" required>
+                <mat-option *ngFor="let executive of executives"
+                  [value]="executive.idEjecutivo">{{executive.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idEjecutivo" nomCampo="Signatario"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Elaboro</mat-label>
+              <mat-select formControlName="idFuncionario" required>
+                <mat-option *ngFor="let executive of allExecutives"
+                  [value]="executive.idEjecutivo">{{executive.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idFuncionario" nomCampo="Elaboro"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
           <div class="form-cell-4" *ngIf="isEdit">
               <button matTooltip="Exportar" class="export-pdf" mat-fab extended (click)="downloadFile(0)">
                   <mat-icon>get_app</mat-icon>PDF

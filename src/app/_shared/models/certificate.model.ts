@@ -16,4 +16,5 @@ export interface Certificate {
     estadoInstrumento?: string;
     observaciones?: string;
     idEstatus?: number;
+    idEjecutivo?: number;
 }

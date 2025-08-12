@@ -25,5 +25,5 @@ export interface LetterDetail {
     idOficio?: Number;
     clave?: Number;
     fSolicitudFmt?: string;
-    idSolicitud?: Number;
+    idSolicitud?: number;
 }

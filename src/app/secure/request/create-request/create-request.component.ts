@@ -20,6 +20,7 @@ import { TemplateService } from 'src/app/_shared/services/template.service';
 import { Template } from 'src/app/_shared/models/template.model';
 import { addMonths } from 'src/app/_shared/utils/date.utils';
 import { DocumentService } from 'src/app/_shared/services/documents.service';
+import { ExecutiveService } from 'src/app/_shared/services/executive.service';
 
 @Component({
   selector: 'create-request',
@@ -40,6 +41,8 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
   addresses: any[] = [];
   allAddresses: any[] = [];
   warehouses: any[] = [];
+  executives: any[] = [];
+  allExecutives: any[] = [];
   templates: Template[] = [];
   displayedColumns: string[] = ['modelo', 'producto', 'cantidad', 'idUnidad', 'marca', 'pais', 'actions'];
   dataSource: MatTableDataSource<RequestDetail> = new MatTableDataSource();
@@ -54,6 +57,7 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
     private standardService: StandardService,
     private clientAddressService: ClientAddressService,
     private unitService: UnitService,
+    private executiveService: ExecutiveService,
     private templateService: TemplateService,
     private documentService: DocumentService,
     private dialog: MatDialog
@@ -80,6 +84,8 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
       fPrograma: new FormControl(addMonths(new Date(), 1), [Validators.required]),
       idLugar: new FormControl('', [Validators.required]),
       idFormato: new FormControl('', []),
+      idEjecutivo: new FormControl('', [Validators.required]),
+      idFuncionario: new FormControl('', [Validators.required]),
       clave: new FormControl({ value: '', disabled: true })
     });
 
@@ -121,6 +127,13 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
     }
 
     try {
+      this.allExecutives = await lastValueFrom(this.executiveService.getActive());
+      if (this.allExecutives.length > 0) this.requestForm.get('idFuncionario')!.setValue(this.allExecutives[0].idEjecutivo);
+    } catch (error) {
+      console.error('Error trying to get all executives');
+    }
+
+    try {
       this.clients = await lastValueFrom(this.clientService.getAllActive());
       if (this.clients.length > 0) this.requestForm.get('idCliente')!.setValue(this.clients[0].idCliente);
       this.filteredClients.next(this.clients.slice());
@@ -149,6 +162,12 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
       console.error('Error trying to get standards');
     }
 
+    this.requestForm.get('idNorma')!.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.loadExecutive();
+      });
+
     if (this.id) {
       this.isEdit = true;
 
@@ -166,6 +185,22 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
         console.error('Error trying to get request create');
       }
     }
+  }
+
+  loadExecutive() {
+    this.executives = [];
+    if (this.requestForm.get('idNorma')!.invalid) return;
+    this.executiveService.getByStandard(this.requestForm.get('idNorma')!.value)
+      .pipe()
+      .subscribe({
+        next: (response) => {
+          this.executives = response;
+          if (this.executives.length > 0 && !this.isEdit) this.requestForm.get('idEjecutivo')!.setValue(this.executives[0].idEjecutivo);
+        },
+        error: () => {
+          console.error('Error trying to get executives');
+        }
+      });
   }
 
   initDetailsTable(requests: RequestDetail[], setPartida?: boolean) {
@@ -291,18 +326,10 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
 
   updateForm(request: Request): void {
     this.request = request;
+    this.requestForm.patchValue(request);
     this.requestForm.patchValue({
-      idSolicitud: request.idSolicitud,
-      idCliente: request.idCliente,
-      folio: request.folio,
-      idNorma: request.idNorma,
-      pedimento: request.pedimento,
       tipoServicio: request.tipoServicio ? '1' : '0',
       tipoRegimen: request.tipoRegimen ? '1' : '0',
-      fSolicitud: request.fSolicitud,
-      fPrograma: request.fPrograma,
-      idLugar: request.idLugar,
-      clave: request.clave
     });
 
     if (this.request.tipoServicio) {

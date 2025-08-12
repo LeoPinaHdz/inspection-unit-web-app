@@ -34,6 +34,7 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
   filteredClients: ReplaySubject<Client[]> = new ReplaySubject<Client[]>(1);
   standards: any[] = [];
   executives: any[] = [];
+  allExecutives: any[] = [];
   officials: any[] = [];
   displayedColumns: string[] = ['select', 'clave', 'fSolicitudFmt'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
@@ -98,6 +99,7 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this._onDestroy))
         .subscribe(() => {
           this.loadRequests();
+          this.loadExecutive();
         });
     } catch (error) {
       console.error('Error trying to get standards');
@@ -128,17 +130,10 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.executives = await lastValueFrom(this.executiveService.getActive());
-      if (this.executives.length > 0) this.letterForm.get('idEjecutivo')!.setValue(this.executives[0].idEjecutivo);
+      this.allExecutives = await lastValueFrom(this.executiveService.getActive());
+      if (this.allExecutives.length > 0) this.letterForm.get('idFuncionario')!.setValue(this.allExecutives[0].idEjecutivo);
     } catch (error) {
-      console.error('Error trying to get executives');
-    }
-
-    try {
-      this.officials = await lastValueFrom(this.officialService.getActive());
-      if (this.officials.length > 0) this.letterForm.get('idFuncionario')!.setValue(this.officials[0].idFuncionario);
-    } catch (error) {
-      console.error('Error trying to get officials');
+      console.error('Error trying to get all executives');
     }
 
     if (this.id) {
@@ -162,6 +157,22 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  loadExecutive() {
+    this.executives = [];
+    if (this.letterForm.get('idNorma')!.invalid) return;
+    this.executiveService.getByStandard(this.letterForm.get('idNorma')!.value)
+      .pipe()
+      .subscribe({
+        next: (response) => {
+          this.executives = response;
+          if (this.executives.length > 0 && !this.isEdit) this.letterForm.get('idEjecutivo')!.setValue(this.executives[0].idEjecutivo);
+        },
+        error: () => {
+          console.error('Error trying to get executives');
+        }
+      });
   }
 
   async loadRequests() {
@@ -237,33 +248,47 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
   }
 
   updateForm(letter: Letter): void {
+    this.letterForm.patchValue(letter);
     this.letterForm.patchValue({
-      idOficio: letter.idOficio,
-      idCliente: letter.idCliente,
-      folio: letter.folio,
-      hPresentacion: letter.hPresentacion,
-      idNorma: letter.idNorma,
-      fOficio: letter.fOficio,
-      idEjecutivo: letter.idEjecutivo,
-      idFuncionario: letter.idFuncionario,
-      clave: letter.clave,
       solicitudPor: `${letter.solicitudPor}`,
-      pedimento: letter.pedimento,
-      observaciones: letter.observaciones
     });
 
     this.letter = letter;
 
-    this.updateSelection();
+    this.updateSelection(true);
   }
 
-  updateSelection() {
+  async updateSelection(update = false) {
     if (this.letter.detalles) {
-      const selected = this.letterDetails.filter(ld =>
-        this.letter.detalles!.some(d => d.idSolicitud === ld.idSolicitud)
-      );
-      this.selection.clear();
-      this.selection.select(...selected);
+
+      if (update) {
+        this.letter.detalles
+          .forEach(async (d) => {
+            if (d.idSolicitud && !this.letterDetails.some(ld => ld.idSolicitud == d.idSolicitud)) {
+              try {
+                const letter = await lastValueFrom(this.requestService.getById(d.idSolicitud));
+
+                this.letterDetails = [letter, ...this.letterDetails];
+
+                this.dataSource = new MatTableDataSource(this.letterDetails);
+                const selected = this.letterDetails.filter(ld =>
+                  this.letter.detalles!.some(d => d.idSolicitud === ld.idSolicitud)
+                );
+                this.selection.clear();
+                this.selection.select(...selected);
+              } catch (error) {
+                console.error('Error trying to get requests by import');
+              }
+            }
+          });
+      } else {
+        this.dataSource = new MatTableDataSource(this.letterDetails);
+        const selected = this.letterDetails.filter(ld =>
+          this.letter.detalles!.some(d => d.idSolicitud === ld.idSolicitud)
+        );
+        this.selection.clear();
+        this.selection.select(...selected);
+      }
     }
   }
 

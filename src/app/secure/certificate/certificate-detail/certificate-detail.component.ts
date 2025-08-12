@@ -14,6 +14,7 @@ import { Letter } from 'src/app/_shared/models/letter.model';
 import { Request } from 'src/app/_shared/models/request.model';
 import { saveFile } from 'src/app/_shared/utils/file.utils';
 import { DocumentService } from 'src/app/_shared/services/documents.service';
+import { ExecutiveService } from 'src/app/_shared/services/executive.service';
 
 @Component({
   selector: 'certificates',
@@ -25,6 +26,7 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
   certificate: Certificate = { idActa: 0, idEstatus: 1 };
   clients: Client[] = [];
   letters: Letter[] = [];
+  allExecutives: any[] = [];
   requests: Request[] = [];
   certificateForm!: FormGroup;
   _onDestroy = new Subject<void>();
@@ -37,6 +39,7 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
     private certificateService: CertificateService,
     private letterService: LetterService,
     private requestService: RequestService,
+    private executiveService: ExecutiveService,
     private documentService: DocumentService,
     private dialog: MatDialog
   ) { }
@@ -56,6 +59,7 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
       clientFilter: new FormControl('', []),
       idOficio: new FormControl('', [Validators.required]),
       idSolicitud: new FormControl('', [Validators.required]),
+      idEjecutivo: new FormControl('', [Validators.required]),
       fIniActa: new FormControl('', [Validators.required]),
       hIniActa: new FormControl('', [Validators.required]),
       fFinActa: new FormControl('', [Validators.required]),
@@ -70,16 +74,16 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
     });
 
     this.certificateForm.get('idOficio')!.valueChanges
-    .pipe(takeUntil(this._onDestroy))
-    .subscribe(() => {
-      this.loadRequests();
-    });
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.loadRequests();
+      });
 
     try {
-      this.clients = await lastValueFrom(this.clientService.getAllActive());
-      if (this.clients.length > 0) this.certificateForm.get('idCliente')!.setValue(this.clients[0].idCliente);
+      this.allExecutives = await lastValueFrom(this.executiveService.getActive());
+      if (this.allExecutives.length > 0) this.certificateForm.get('idEjecutivo')!.setValue(this.allExecutives[0].idEjecutivo);
     } catch (error) {
-      console.error('Error trying to get clients');
+      console.error('Error trying to get all executives');
     }
 
     try {
@@ -113,6 +117,19 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (response) => {
             this.updateForm(response);
+
+            if (response.idOficio) {
+              this.letterService.getById(response.idOficio)
+                .pipe()
+                .subscribe({
+                  next: (response) => {
+                    this.letters = [response, ...this.letters];
+                  },
+                  error: () => {
+                    console.error('Error trying to get letter detail');
+                  }
+                });
+              }
           },
           error: () => {
             this.dialog.open(SimpleDialogComponent, {
@@ -151,24 +168,7 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
   }
 
   updateForm(certificate: Certificate): void {
-    this.certificateForm.patchValue({
-      idActa: certificate.idActa,
-      folio: certificate.folio,
-      idCliente: certificate.idCliente,
-      idOficio: certificate.idOficio,
-      idSolicitud: certificate.idSolicitud,
-      fIniActa: certificate.fIniActa,
-      hIniActa: certificate.hIniActa,
-      fFinActa: certificate.fFinActa,
-      hFinActa: certificate.hFinActa,
-      otroServicio: certificate.otroServicio,
-      cual: certificate.cual,
-      tipoLote: certificate.tipoLote,
-      cantidad: certificate.cantidad,
-      instrumento: certificate.instrumento,
-      estadoInstrumento: certificate.estadoInstrumento,
-      observaciones: certificate.observaciones
-    });
+    this.certificateForm.patchValue(certificate);
 
     this.loadLetters();
 

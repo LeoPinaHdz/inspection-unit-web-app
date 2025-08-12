@@ -11,9 +11,7 @@ import { Client } from 'src/app/_shared/models/client.model';
 import { List, ListDetail } from 'src/app/_shared/models/list.model';
 import { ListService } from 'src/app/_shared/services/list.service';
 import { ExecutiveService } from 'src/app/_shared/services/executive.service';
-import { RequestService } from 'src/app/_shared/services/request.service';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DisplayService } from 'src/app/_shared/services/display.service';
 import { Request } from 'src/app/_shared/models/request.model';
 import { StandardService } from 'src/app/_shared/services/standard.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -41,9 +39,9 @@ export class ListDetailComponent implements OnInit, OnDestroy {
   allExecutives: any[] = [];
   referenceDetails: any[] = [];
   standardPoints: any[] = [];
-  displayedColumns: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais'];
-  displayedColumnsType0: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais'];
-  displayedColumnsType1: string[] = ['select', 'SubFolio', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Fraccion'];
+  displayedColumns: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Saldo'];
+  displayedColumnsType0: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Saldo'];
+  displayedColumnsType1: string[] = ['select', 'SubFolio', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Fraccion', 'Saldo'];
   displayedColumnsStandard: string[] = ['contenido', 'dictaminacion', 'observaciones'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -60,7 +58,6 @@ export class ListDetailComponent implements OnInit, OnDestroy {
     private listService: ListService,
     private clientService: ClientService,
     private executiveService: ExecutiveService,
-    private displayService: DisplayService,
     private dialog: MatDialog,
     private documentService: DocumentService,
     private standardService: StandardService
@@ -79,6 +76,7 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       idCliente: new FormControl({ value: '', disabled: this.id }, [Validators.required]),
       idSolicitud: new FormControl({ value: '', disabled: this.id }, [Validators.required]),
       clientFilter: new FormControl('', []),
+      fEntrada: new FormControl('', [Validators.required]),
       fInspeccion: new FormControl({ value: new Date(), disabled: false }, [Validators.required]),
       fPresentacion: new FormControl({ value: new Date(), disabled: false }, [Validators.required]),
       idEjecutivo: new FormControl('', [Validators.required]),
@@ -87,12 +85,14 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       tecnica: new FormControl('', [Validators.required]),
       lote: new FormControl('', [Validators.required]),
       muestra: new FormControl('', [Validators.required]),
-      idPresentacion: new FormControl('', [Validators.required]),
+      presentacion: new FormControl('', [Validators.maxLength(250)]),
       instrumento: new FormControl('', [Validators.required]),
       observaciones: new FormControl(''),
       puntos: new FormControl(''),
       resumen: new FormControl(''),
-      contenido: new FormControl('')
+      contenido: new FormControl(''),
+      medidas: new FormControl('', [Validators.maxLength(500)]),
+      agrupacion: new FormControl('', [Validators.maxLength(250)])
     });
 
     if (!this.id) {
@@ -145,13 +145,6 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Error trying to get clients', error);
-    }
-
-    try {
-      this.displays = await lastValueFrom(this.displayService.getAll());
-      if (this.displays.length > 0) this.listForm.get('idPresentacion')!.setValue(this.displays[0].idPresentacion);
-    } catch (error) {
-      console.error('Error trying to get displays');
     }
 
     if (this.id) {
@@ -332,23 +325,8 @@ export class ListDetailComponent implements OnInit, OnDestroy {
 
   updateForm(list: List): void {
     this.list = list;
+    this.listForm.patchValue(list);
     this.listForm.patchValue({
-      idLista: list.idLista,
-      idCliente: list.idCliente,
-      idSolicitud: list.idSolicitud,
-      fInspeccion: list.fInspeccion,
-      fPresentacion: list.fPresentacion,
-      idEjecutivo: list.idEjecutivo,
-      idEjecutivo2: list.idEjecutivo2,
-      tecnica: list.tecnica,
-      lote: list.lote,
-      muestra: list.muestra,
-      idPresentacion: list.idPresentacion,
-      instrumento: list.instrumento,
-      puntos: list.puntos,
-      resumen: list.resumen,
-      contenido: list.contenido,
-      observaciones: list.observaciones,
       tipoServicio: list.tipoServicio ? '1' : '0'
     });
 
