@@ -1,0 +1,187 @@
+<div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <a [routerLink]="['/secure/order-services']" class="button-back" color="accent" mat-mini-fab>
+          <mat-icon>arrow_circle_left</mat-icon>
+        </a>
+        Servicio
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="formOrderService">
+        <div class="form-container">
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>ID</mat-label>
+              <input matInput formControlName="idOrdenServicio" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <!--div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Almacen</mat-label>
+              <mat-select formControlName="idBodega" required>
+                <mat-option *ngFor="let warehouse of warehouses"
+                  [value]="warehouse.idBodega">{{warehouse.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idBodega" nomCampo="Almacen"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div-->
+
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Cliente</mat-label>
+              <mat-select formControlName="idCliente" required>
+                <mat-option *ngFor="let client of clients" [value]="client.idCliente">{{client.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idCliente" nomCampo="Cliente"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fServicio" required />
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>
+                <error-message [control]="form.fServicio" nomCampo="Fecha"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Observaciones</mat-label>
+              <input matInput formControlName="observaciones" appCurrencyMask type="text" maxlength="200" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3">
+            <button *ngIf="orderService.idEstatus === 1" (click)="onSubmit()" mat-fab extended>Guardar</button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Detalle</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="formOrderServiceDetail" *ngIf="orderService.idEstatus === 1">
+        <div class="form-container">
+          <div class="form-cell-3"><mat-form-field appearance="outline">
+              <mat-label>Servicio</mat-label>
+              <mat-select formControlName="idServicio" required>
+                <mat-option *ngFor="let service of services" [value]="service.idServicio">{{service.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idServicio" nomCampo="Servicio"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2"><mat-form-field class="mat-mdc-form-field-small" appearance="outline">
+              <mat-label>Cantidad</mat-label>
+              <input matInput formControlName="cantidad" appCurrencyMask type="number" maxlength="6" max="999999" required />
+              <mat-error>
+                <error-message [control]="form.cantidad" nomCampo="Cantidad"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Unidad</mat-label>
+              <mat-select formControlName="idUnidad" placeholder="Unidad" #unitSelect required>
+                <mat-option>
+                  <ngx-mat-select-search placeholderLabel="Busca unidad" noEntriesFoundLabel="No se encontraron resultados" formControlName="idUnidadFilter"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let bulto of filteredUnits | async" [value]="bulto.idUnidad">
+                  {{bulto.nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idUnidad" nomCampo="Unidad"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3"><mat-form-field class="mat-mdc-form-field-large" appearance="outline">
+              <mat-label>Referencia</mat-label>
+              <input matInput formControlName="referencia" type="text" appCurrencyMask maxlength="250" required />
+              <mat-error>
+                <error-message [control]="form.referencia" nomCampo="Referencia"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-1">
+            <button (click)="onCancelEdit()" mat-fab extended color="warn" *ngIf="selectedDetail">Cancelar</button>
+          </div>
+
+          <div class="form-cell-1">
+            <button type="button" (click)="onSubmitDetail()" mat-fab extended color="primary">{{!selectedDetail ||
+              selectedDetail.partida === 0 ? 'Agregar' : 'Guardar'}}</button>
+          </div>
+        </div>
+      </form>
+
+      <div *ngIf="orderServiceDetails.length === 0" class="error-message">
+        *La orden debe contener al menos un detalle
+      </div>
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="partida">
+          <th mat-header-cell *matHeaderCellDef>Partida</th>
+          <td mat-cell *matCellDef="let element"> {{element.partida}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="servicio">
+          <th mat-header-cell *matHeaderCellDef>Servicio</th>
+          <td mat-cell *matCellDef="let element"> {{element.nombreServicio}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad">
+          <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+          <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreUnidad">
+          <th mat-header-cell *matHeaderCellDef>Unidad</th>
+          <td mat-cell *matCellDef="let element"> {{element.nombreUnidad}} </td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+
+        <ng-container matColumnDef="referencia">
+          <th mat-header-cell *matHeaderCellDef>Referencia</th>
+          <td mat-cell *matCellDef="let element"> {{element.referencia}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button *ngIf="orderService.idEstatus === 1 && !selectedDetail" mat-mini-fab matTooltip="Editar" color="primary"
+              (click)="editDetail(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button *ngIf="orderService.idEstatus === 1" mat-mini-fab matTooltip="Eliminar" color="warn"
+              (click)="showConfirmDeleteDialog(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

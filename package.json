@@ -27,6 +27,8 @@
     "chart.js": "^3.6.0",
     "file-saver": "^2.0.5",
     "jquery": "^3.6.4",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "ng2-charts": "^4.1.1",
     "ngx-mat-select-search": "^7.0.5",
     "oidc-client": "^1.11.5",

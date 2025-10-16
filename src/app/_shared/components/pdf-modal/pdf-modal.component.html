@@ -1,0 +1,7 @@
+<h2 mat-dialog-title>Vista previa</h2>
+<mat-dialog-content>
+  <iframe [src]="pdfUrl" width="100%" height="500px"></iframe>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeModal()">Cerrar</button>
+</mat-dialog-actions>

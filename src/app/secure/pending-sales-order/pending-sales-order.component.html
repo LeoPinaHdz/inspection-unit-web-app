@@ -1,0 +1,154 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Listado de Servicios Pendientes de Orden de Venta</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="searchForm">
+      <div class="form-container">
+        <!--div class="form-cell-3"><mat-form-field appearance="outline">
+            <mat-label>Almacen</mat-label>
+            <mat-select formControlName="idBodega" required>
+              <mat-option *ngFor="let warehouse of warehouses"
+                [value]="warehouse.idBodega">{{warehouse.nombre}}</mat-option>
+            </mat-select>
+            <mat-error>
+              <error-message [control]="form.idBodega" nomCampo="Almacen"></error-message>
+            </mat-error>
+          </mat-form-field>
+        </div-->
+
+        <div class="form-cell-3"><mat-form-field appearance="outline">
+            <mat-label>Cliente</mat-label>
+            <mat-select formControlName="idCliente" required>
+              <mat-option *ngFor="let client of clients" [value]="client.idCliente">{{client.nombre}}</mat-option>
+            </mat-select>
+            <mat-error>
+              <error-message [control]="form.idCliente" nomCampo="Cliente"></error-message>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-cell-3"><mat-form-field appearance="outline">
+            <mat-label>Servicio</mat-label>
+            <mat-select formControlName="idServicio">
+              <mat-option *ngFor="let service of services" [value]="service.idServicio">{{service.nombre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-cell-3">
+          <mat-checkbox formControlName="pendientes" color="primary" (click)="resetData()">
+            Pendientes
+          </mat-checkbox>
+        </div>
+
+        <div class="form-cell-4"><mat-form-field appearance="outline">
+            <mat-label>Fecha de movimiento</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input formControlName="fechaDel" matStartDate placeholder="De Fecha Movimiento">
+              <input formControlName="fechaAl" matEndDate placeholder="A Fecha Movimiento">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+        </div>
+
+        <div class="form-cell-3 list-form-section">
+          <button class="form-button no-left-margin" color="primary" (click)="onSearch()" mat-fab extended>
+            <mat-icon>search</mat-icon> Buscar
+          </button>
+          <button class="form-button no-left-margin color-accent" color="accent" type="reset" mat-fab extended>
+            Limpia filtros
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-content>
+    <div class="table-container mat-elevation-z8">
+      <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 box-shadow">
+        <ng-container matColumnDef="almacen">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Almacen </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.almacen }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cliente">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.cliente }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="servicio">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Servicio </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.servicio }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="fEmision">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Emisi&oacute;n </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.fEmision | date:'dd/MM/yyyy' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cantidad">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.cantidad }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="unidad">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Unidad </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.unidad }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="cuota">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Cuota </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.cuota }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="referencia">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Referencia </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.referencia }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="idOrdenServicio">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> ID OV </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{ row.idOrdenServicio }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="select">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox *ngIf="form.pendientes.value === true" (change)="$event ? toggleAllRows() : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <mat-checkbox *ngIf="form.pendientes.value === true && row.cuota === 'OK'" (click)="$event.stopPropagation()" (change)="$event ? toggleRow(row) : null"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+      <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card-content>
+  <mat-card-footer *ngIf="!selection.isEmpty()">
+    <div>
+      <mat-form-field class="form-cell-3" appearance="outline" *ngIf="tiposOrden.length > 0">
+        <mat-label>Tipo Factura</mat-label>
+        <mat-select [formControl]="tipoOrdenControl" required>
+          <mat-option *ngFor="let tipo of tiposOrden" [value]="tipo.valor">{{tipo.valor}}</mat-option>
+        </mat-select>
+        <mat-error>
+          <error-message [control]="tipoOrdenControl" nomCampo="Tipo Factura"></error-message>
+        </mat-error>
+      </mat-form-field>
+      <button (click)="onSubmit()" mat-fab extended>Generar Orden Venta</button>
+    </div>
+  </mat-card-footer>
+</mat-card>

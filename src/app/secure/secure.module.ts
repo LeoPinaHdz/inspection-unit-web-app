@@ -9,7 +9,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatListModule } from '@angular/material/list';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from 'src/app/_shared/shared.module';
 import { MatButtonModule } from '@angular/material/button';
@@ -66,6 +66,16 @@ import { RulingsComponent } from './ruling/ruling-list/ruling-list.component';
 import { RulingDetailComponent } from './ruling/ruling-detail/ruling-detail.component';
 import { ListComponent } from './list/list/list.component';
 import { ListDetailComponent } from './list/list-detail/list-detail.component';
+import { FeesComponent } from './fee/fees.component';
+import { FeeDetailComponent } from './fee/fee-detail/fee-detail.component';
+import { PendingSalesOrderComponent } from './pending-sales-order/pending-sales-order.component';
+import { SalesOrderComponent } from './sales-order/sales-order.component';
+import { SalesOrderDetailComponent } from './sales-order/sales-order-detail/sales-order-detail.component';
+import { OrderServicesComponent } from './order-service/order-service.component';
+import { OrderServiceDetailComponent } from './order-service/order-service-detail/order-service-detail.component';
+import { PendingSalesService } from './pending-sales-order/pending-sales.service';
+import { SalesOrderService } from './sales-order/sales-order.service';
+import { OrderServiceService } from './order-service/order-service.service';
 
 @NgModule({
   declarations: [
@@ -109,7 +119,14 @@ import { ListDetailComponent } from './list/list-detail/list-detail.component';
     RulingsComponent,
     RulingDetailComponent,
     ListComponent,
-    ListDetailComponent
+    ListDetailComponent,
+    FeesComponent,
+    FeeDetailComponent,
+    PendingSalesOrderComponent,
+    SalesOrderComponent,
+    SalesOrderDetailComponent,
+    OrderServicesComponent,
+    OrderServiceDetailComponent
   ],
   imports: [
     SecureRoutingModule,
@@ -141,6 +158,10 @@ import { ListDetailComponent } from './list/list-detail/list-detail.component';
   ],
   providers: [
     NativeDateAdapter,
+    PendingSalesService,
+    SalesOrderService,
+    OrderServiceService,
+    CurrencyPipe
   ],
   exports: [
   ],

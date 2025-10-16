@@ -7,7 +7,7 @@ import { AuthService } from '../_shared/services/auth.service';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
-  complexMenus= [{name: 'op', isOpen: false}, {name: 'cat', isOpen: false}];
+  complexMenus= [{name: 'op', isOpen: false}, {name: 'cat', isOpen: false}, {name: 'ov', isOpen: false}];
   isExpanded = false;
 
   constructor(private authService: AuthService) {}

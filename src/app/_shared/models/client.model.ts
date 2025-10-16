@@ -17,4 +17,5 @@ export interface Client {
     idPromotor?: number;
     idEjecutivo?: number;
     tipoMunicipio?: boolean;
+    aplicaIva?: boolean;
 }

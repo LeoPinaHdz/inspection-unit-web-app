@@ -56,6 +56,21 @@
               <a *ngIf="hasRole('CONVERSION')" class="nav-link text-dark" (click)="closeAllMenus()" [routerLink]="['/secure/conversions']">Conversi&oacute;n</a>
             </div>
           </li>
+          <li *ngIf="hasRoles(['SERVICIOS', 'CUOTAS', 'PENDIENTE ORDEN VENTA', 'ORDEN VENTA', 'REPORTES OV'])"
+            class="nav-item"
+            [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <span class="nav-link dropdown-toggle" (click)="toggleMenu('ov')" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Orden Venta
+            </span>
+            <div *ngIf="isMenuOpen('ov')" class="dropdown-menu logistics-dropdown-menu" aria-labelledby="navbarDropdown">
+              <!--a *ngIf="hasRole('SERVICIOS')" class="nav-link text-dark" (click)="toggleMenu('ov')" [routerLink]="['/secure/services']">Servicios</a-->
+              <a *ngIf="hasRole('CUOTAS')" class="nav-link text-dark" (click)="toggleMenu('ov')" [routerLink]="['/secure/fees']">Cuotas</a>
+              <a *ngIf="hasRole('REGISTRO SERVICIOS')" class="nav-link text-dark" (click)="toggleMenu('ov')" [routerLink]="['/secure/order-services']">Registro de Servicios</a>
+              <a *ngIf="hasRole('PENDIENTE ORDEN VENTA')" class="nav-link text-dark" (click)="toggleMenu('ov')" [routerLink]="['/secure/pending-sales-order']">Pendiente de Orden Venta</a>
+              <a *ngIf="hasRole('ORDEN VENTA')" class="nav-link text-dark" (click)="toggleMenu('ov')" [routerLink]="['/secure/sales-orders']">Orden Venta</a>
+            </div>
+          </li>
           <li *ngIf="hasRole('REPORTES')" class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" (click)="closeAllMenus()" [routerLink]="['/secure/reports']">Reportes</a>
           </li>

@@ -43,9 +43,14 @@ import { DisplayService } from './services/display.service';
 import { LoadingService } from './services/loading.service';
 import { StatusPipe } from './components/pipes/status.pipe';
 import { DocumentService } from './services/documents.service';
+import { PdfModalComponent } from './components/pdf-modal/pdf-modal.component';
+import { WarehouseService } from './services/warehouse.service';
+import { FeeService } from './services/fee.service';
+import { ServiceService } from './services/service.service';
+import { ParameterService } from './services/parameter.service';
 
 @NgModule({
-  declarations: [ErrorMessageComponent, ConfirmationDialogComponent, SimpleDialogComponent, UploadButtonComponent, StatusPipe],
+  declarations: [ErrorMessageComponent, ConfirmationDialogComponent, SimpleDialogComponent, UploadButtonComponent, StatusPipe, PdfModalComponent],
   imports: [FormsModule, CommonModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatIconModule],
   exports: [
     FormsModule,
@@ -55,7 +60,8 @@ import { DocumentService } from './services/documents.service';
     ConfirmationDialogComponent,
     SimpleDialogComponent,
     UploadButtonComponent,
-    StatusPipe
+    StatusPipe,
+    PdfModalComponent
   ],
   providers: [
     ExcelService,
@@ -91,7 +97,11 @@ import { DocumentService } from './services/documents.service';
     DisplayService,
     ListService,
     LoadingService,
-    DocumentService
+    DocumentService,
+    WarehouseService,
+    FeeService,
+    ServiceService,
+    ParameterService
   ],
 })
 export class SharedModule { }

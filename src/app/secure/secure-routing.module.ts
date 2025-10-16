@@ -29,6 +29,13 @@ import { RulingsComponent } from './ruling/ruling-list/ruling-list.component';
 import { RulingDetailComponent } from './ruling/ruling-detail/ruling-detail.component';
 import { ListComponent } from './list/list/list.component';
 import { ListDetailComponent } from './list/list-detail/list-detail.component';
+import { FeesComponent } from './fee/fees.component';
+import { FeeDetailComponent } from './fee/fee-detail/fee-detail.component';
+import { PendingSalesOrderComponent } from './pending-sales-order/pending-sales-order.component';
+import { SalesOrderComponent } from './sales-order/sales-order.component';
+import { SalesOrderDetailComponent } from './sales-order/sales-order-detail/sales-order-detail.component';
+import { OrderServicesComponent } from './order-service/order-service.component';
+import { OrderServiceDetailComponent } from './order-service/order-service-detail/order-service-detail.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -87,7 +94,18 @@ const routes: Routes = [
   { path: 'users', component: UsersComponent, canActivate: [AuthGuard], data: {role: 'USUARIOS'} },
   { path: 'user/new', component: UserDetailComponent, canActivate: [AuthGuard], data: {role: 'USUARIOS'}},
   { path: 'user/:id', component: UserDetailComponent, canActivate: [AuthGuard], data: {role: 'USUARIOS'}},
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: {role: 'REPORTES'} }
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard], data: {role: 'REPORTES'} },
+
+  { path: 'fees', component: FeesComponent, canActivate: [AuthGuard], data: {role: 'CUOTAS'} },
+  { path: 'fee/new', component: FeeDetailComponent, canActivate: [AuthGuard], data: {role: 'CUOTAS'}},
+  { path: 'fee/:id', component: FeeDetailComponent, canActivate: [AuthGuard], data: {role: 'CUOTAS'}},
+  { path: 'pending-sales-order', component: PendingSalesOrderComponent, canActivate: [AuthGuard], data: {role: 'PENDIENTE ORDEN VENTA'}},
+  { path: 'sales-orders', component: SalesOrderComponent, canActivate: [AuthGuard], data: {role: 'ORDEN VENTA'}},
+  { path: 'sales-order/new', component: SalesOrderDetailComponent, canActivate: [AuthGuard], data: {role: 'ORDEN VENTA'}},
+  { path: 'sales-order/:id', component: SalesOrderDetailComponent, canActivate: [AuthGuard], data: {role: 'ORDEN VENTA'}},
+  { path: 'order-services', component: OrderServicesComponent, canActivate: [AuthGuard], data: {role: 'REGISTRO SERVICIOS'} },
+  { path: 'order-service/new', component: OrderServiceDetailComponent, canActivate: [AuthGuard], data: {role: 'REGISTRO SERVICIOS'}},
+  { path: 'order-service/:id', component: OrderServiceDetailComponent, canActivate: [AuthGuard], data: {role: 'REGISTRO SERVICIOS'}},
 ];
 
 @NgModule({

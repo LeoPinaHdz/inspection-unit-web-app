@@ -1,0 +1,98 @@
+<div>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <a [routerLink]="['/secure/fees']" class="button-back" color="accent" mat-mini-fab>
+          <mat-icon>arrow_circle_left</mat-icon>
+        </a>
+        Cuota
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="formFee">
+        <div class="form-container">
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>ID</mat-label>
+              <input matInput formControlName="idCuota" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <!--div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Almacen</mat-label>
+              <mat-select formControlName="idBodega" required>
+                <mat-option *ngFor="let warehouse of warehouses"
+                  [value]="warehouse.idBodega">{{warehouse.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idBodega" nomCampo="Almacen"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div-->
+
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Cliente</mat-label>
+              <mat-select formControlName="idCliente" required>
+                <mat-option *ngFor="let client of clients" [value]="client.idCliente">{{client.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idCliente" nomCampo="Cliente"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3"><mat-form-field appearance="outline">
+              <mat-label>Servicio</mat-label>
+              <mat-select formControlName="idServicio">
+                <mat-option *ngFor="let service of services" [value]="service.idServicio">{{service.nombre}}</mat-option>
+              </mat-select>
+              <mat-error>
+                <error-message [control]="form.idServicio" nomCampo="Almacen"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3"><mat-form-field appearance="outline">
+              <mat-label>Fecha de vigencia</mat-label>
+              <mat-date-range-input [rangePicker]="picker">
+                <input formControlName="fVigenciaIni" matStartDate placeholder="De Fecha Vigencia Inicial">
+                <input formControlName="fVigenciaFin" matEndDate placeholder="A Fecha Vigencia Final">
+              </mat-date-range-input>
+              <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Cuota</mat-label>
+              <input matInput formControlName="cuota" appCurrencyMask type="number"/>
+              <mat-error>
+                <error-message [control]="form.cuota" nomCampo="Cuota"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-checkbox formControlName="aplicaIva" color="primary">
+              NO aplica IVA
+            </mat-checkbox>
+          </div>
+
+          <div class="form-cell-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Observaciones</mat-label>
+              <input matInput formControlName="observaciones" appCurrencyMask type="text" maxlength="250" />
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+    <mat-card-footer>
+      <button *ngIf="fee.idEstatus === 1" (click)="onSubmit()" mat-fab extended>Guardar</button>
+    </mat-card-footer>
+  </mat-card>
+</div>
