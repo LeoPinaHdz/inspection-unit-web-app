@@ -15,6 +15,11 @@ export interface Certificate {
     instrumento?: string;
     estadoInstrumento?: string;
     observaciones?: string;
+    factura?: string;
+    lote?: string;
+    muestra?: string;
+    manifiesto?: string;
+    resultado?: string;
     idEstatus?: number;
     idEjecutivo?: number;
 }

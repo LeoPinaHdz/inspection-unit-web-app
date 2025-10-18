@@ -76,22 +76,31 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       idCliente: new FormControl({ value: '', disabled: this.id }, [Validators.required]),
       idSolicitud: new FormControl({ value: '', disabled: this.id }, [Validators.required]),
       clientFilter: new FormControl('', []),
-      fEntrada: new FormControl('', [Validators.required]),
+      fEntrada: new FormControl(new Date()),
       fInspeccion: new FormControl({ value: new Date(), disabled: false }, [Validators.required]),
       fPresentacion: new FormControl({ value: new Date(), disabled: false }, [Validators.required]),
       idEjecutivo: new FormControl('', [Validators.required]),
       idEjecutivo2: new FormControl('', [Validators.required]),
-      tipoServicio: new FormControl({ value: '0', disabled: this.id }, [Validators.required]),
-      tecnica: new FormControl('', [Validators.required]),
+      idServicio: new FormControl({ value: '0', disabled: this.id }, [Validators.required]),
+      tecnica: new FormControl(''),
       lote: new FormControl('', [Validators.required]),
-      muestra: new FormControl('', [Validators.required]),
+      muestra: new FormControl('', []),
       presentacion: new FormControl('', [Validators.maxLength(250)]),
-      instrumento: new FormControl('', [Validators.required]),
+      instrumento: new FormControl(''),
       observaciones: new FormControl(''),
       puntos: new FormControl(''),
       resumen: new FormControl(''),
       contenido: new FormControl(''),
       medidas: new FormControl('', [Validators.maxLength(500)]),
+      producto: new FormControl('', [Validators.required, Validators.maxLength(200)]),
+      marca: new FormControl('', [Validators.required, Validators.maxLength(200)]),
+      modelo: new FormControl('', [Validators.required, Validators.maxLength(200)]),
+      etiquetas: new FormControl('', [Validators.required]),
+      pais: new FormControl('', [Validators.required, Validators.maxLength(200)]),
+      base: new FormControl('', [Validators.maxLength(200)]),
+      altura: new FormControl('', [Validators.maxLength(200)]),
+      diametro: new FormControl('', [Validators.maxLength(200)]),
+      spe: new FormControl('', [Validators.maxLength(200)]),
       agrupacion: new FormControl('', [Validators.maxLength(250)])
     });
 
@@ -104,10 +113,10 @@ export class ListDetailComponent implements OnInit, OnDestroy {
           this.loadRequestDetail();
         });
 
-      this.listForm.get('tipoServicio')!.valueChanges
+      this.listForm.get('idServicio')!.valueChanges
         .pipe(takeUntil(this._onDestroy))
         .subscribe(() => {
-          this.displayedColumns = this.listForm.get('tipoServicio')!.value == 0 ? this.displayedColumnsType0 : this.displayedColumnsType1;
+          this.displayedColumns = this.listForm.get('idServicio')!.value == 0 ? this.displayedColumnsType0 : this.displayedColumnsType1;
           this.loadRequests();
         });
     }
@@ -173,8 +182,8 @@ export class ListDetailComponent implements OnInit, OnDestroy {
   loadRequests() {
     this.requests = [];
     this.listForm.get('idSolicitud')!.setValue('');
-    if (this.listForm.get('tipoServicio')!.invalid || this.listForm.get('idCliente')!.invalid) return;
-    this.listService.getPendingRequests(this.listForm.get('idCliente')!.value, this.listForm.get('tipoServicio')!.value == 1)
+    if (this.listForm.get('idServicio')!.invalid || this.listForm.get('idCliente')!.invalid) return;
+    this.listService.getPendingRequests(this.listForm.get('idCliente')!.value, this.listForm.get('idServicio')!.value == 1)
       .pipe()
       .subscribe({
         next: (response) => {
@@ -189,8 +198,8 @@ export class ListDetailComponent implements OnInit, OnDestroy {
   loadRequestDetail() {
     this.referenceDetails = [];
     this.dataSource = new MatTableDataSource(this.referenceDetails);
-    if (this.listForm.get('tipoServicio')!.invalid || this.listForm.get('idSolicitud')!.invalid) return;
-    this.listService.getRequestDetail(this.listForm.get('idSolicitud')!.value, this.listForm.get('tipoServicio')!.value == 1)
+    if (this.listForm.get('idServicio')!.invalid || this.listForm.get('idSolicitud')!.invalid) return;
+    this.listService.getRequestDetail(this.listForm.get('idSolicitud')!.value, this.listForm.get('idServicio')!.value == 1)
       .pipe()
       .subscribe({
         next: (response) => {
@@ -238,7 +247,10 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       .pipe()
       .subscribe({
         next: (response) => {
-          this.standardPoints = response.normaPuntos || [];
+          const idServicio = this.listForm.get('idServicio')!.value;
+          const standarPoints = response.normaPuntos || [];
+
+          this.standardPoints = standarPoints.filter(p => p.idServicio == idServicio);
           this.standardDetails = new MatTableDataSource(this.standardPoints);
           this.standardDetails.paginator = this.paginator;
           this.updateResult('C');
@@ -281,8 +293,8 @@ export class ListDetailComponent implements OnInit, OnDestroy {
     request.dictaminacion = this.result;
     request.listasDetalle = this.selection.selected.map(r => {
       return {
-        idFolioDetalle: request.tipoServicio == 0 ? 0 : r.IdFolioDetalle,
-        idSolicitudDetalle: request.tipoServicio == 1 ? 0 : r.IdSolicitudDetalle,
+        idFolioDetalle: request.idServicio == 0 ? 0 : r.IdFolioDetalle,
+        idSolicitudDetalle: request.idServicio == 1 ? 0 : r.IdSolicitudDetalle,
         cantidad: r.Cantidad,
         idEstatus: request.idEstatus
       };
@@ -327,12 +339,12 @@ export class ListDetailComponent implements OnInit, OnDestroy {
     this.list = list;
     this.listForm.patchValue(list);
     this.listForm.patchValue({
-      tipoServicio: list.tipoServicio ? '1' : '0'
+      idServicio: list.idServicio ? '1' : '0'
     });
 
     this.requests = [{ idSolicitud: list.idSolicitud || 0, clave: list.claveSolicitud, idNorma: list.idNorma }];
     this.result = list.dictaminacion || 'C';
-    this.displayedColumns = list.tipoServicio ? this.displayedColumnsType1 : this.displayedColumnsType0;
+    this.displayedColumns = list.idServicio ? this.displayedColumnsType1 : this.displayedColumnsType0;
 
     if (this.result === 'NC') {
       this.resultText = 'No Cumple';
@@ -362,19 +374,19 @@ export class ListDetailComponent implements OnInit, OnDestroy {
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
-      this.updateLote();
+      this.updateLoteNew();
 
       return;
     }
 
     this.selection.select(...this.dataSource.data);
-    this.updateLote();
+    this.updateLoteNew();
   }
 
   toggleRow(row: any) {
     this.selection.toggle(row);
 
-    this.updateLote();
+    this.updateLoteNew();
   }
 
   checkboxLabel(row?: any): string {
@@ -382,6 +394,12 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       return `${this.isAllSelected() ? 'Deselecciona' : 'Selecciona'} todos`;
     }
     return `${this.selection.isSelected(row) ? 'Deselecciona' : 'Selecciona'} row ${row.folio}`;
+  }
+
+  updateLoteNew() {
+    const sum = this.selection.selected.map(s => Number(s.Cantidad || 0)).reduce((acc, value) => acc + value, 0);
+
+    this.listForm.get('etiquetas')!.setValue(sum);
   }
 
   updateLote() {

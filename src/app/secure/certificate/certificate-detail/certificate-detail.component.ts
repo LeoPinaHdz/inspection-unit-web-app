@@ -67,9 +67,14 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
       otroServicio: new FormControl(false),
       cual: new FormControl('', [Validators.maxLength(100)]),
       tipoLote: new FormControl('1', [Validators.required]),
-      cantidad: new FormControl('', [Validators.required, Validators.maxLength(20)]),
-      instrumento: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-      estadoInstrumento: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      cantidad: new FormControl(0, [Validators.maxLength(20)]),
+      instrumento: new FormControl('', [Validators.maxLength(100)]),
+      estadoInstrumento: new FormControl('', [Validators.maxLength(100)]),
+      factura: new FormControl('', [Validators.required, Validators.maxLength(200)]),
+      lote: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      muestra: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      manifiesto: new FormControl('', [Validators.required, Validators.maxLength(500)]),
+      resultado: new FormControl('', [Validators.required, Validators.maxLength(250)]),
       observaciones: new FormControl('', [Validators.required, Validators.maxLength(255)])
     });
 

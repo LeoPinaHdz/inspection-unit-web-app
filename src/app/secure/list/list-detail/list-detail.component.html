@@ -38,7 +38,7 @@
             </mat-form-field>
           </div>
 
-          <div class="form-cell-2">
+          <!--div class="form-cell-2">
             <mat-form-field>
               <mat-label>Fecha Entrada</mat-label>
               <input matInput formControlName="fEntrada" [matDatepicker]="fListaEPicker" required>
@@ -49,9 +49,9 @@
             <mat-error>
               <error-message [control]="form.fEntrada" nomCampo="Fecha Entrada"></error-message>
             </mat-error>
-          </div>
+          </div-->
 
-          <div class="form-cell-2">
+          <div class="form-cell-3">
             <mat-form-field>
               <mat-label>Fecha de Inspecci&oacute;n</mat-label>
               <input matInput formControlName="fInspeccion" [matDatepicker]="fListaPicker" required>
@@ -64,7 +64,7 @@
             </mat-error>
           </div>
 
-          <div class="form-cell-2">
+          <div class="form-cell-3">
             <mat-form-field>
               <mat-label>Fecha Desaduanamiento</mat-label>
               <input matInput formControlName="fPresentacion" [matDatepicker]="fPresentacionPicker" required>
@@ -80,13 +80,13 @@
           <div class="form-cell-2">
             <mat-form-field appearance="outline">
               <mat-label>Servicio</mat-label>
-              <mat-select formControlName="tipoServicio" required>
+              <mat-select formControlName="idServicio" required>
                 <mat-option value="0">Constancia</mat-option>
                 <mat-option value="1">Dictamen</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-error>
-              <error-message [control]="form.tipoServicio" nomCampo="Servicio"></error-message>
+              <error-message [control]="form.idServicio" nomCampo="Servicio"></error-message>
             </mat-error>
           </div>
 
@@ -129,7 +129,7 @@
             </mat-form-field>
           </div>
 
-          <div class="form-cell-3">
+          <!--div class="form-cell-3">
             <mat-form-field appearance="outline">
               <mat-label>Instumento Medici&oacute;n</mat-label>
               <input matInput formControlName="instrumento" appCurrencyMask type="text" />
@@ -157,9 +157,39 @@
                 <error-message [control]="form.muestra" nomCampo="Tamaño Muestra"></error-message>
               </mat-error>
             </mat-form-field>
+          </div-->
+
+          <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Producto</mat-label>
+              <input matInput formControlName="producto" appCurrencyMask type="text" />
+              <mat-error>
+                <error-message [control]="form.producto" nomCampo="Producto"></error-message>
+              </mat-error>
+            </mat-form-field>
           </div>
 
           <div class="form-cell-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Marca</mat-label>
+              <input matInput formControlName="marca" appCurrencyMask type="text" />
+              <mat-error>
+                <error-message [control]="form.marca" nomCampo="Marca"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Modelo</mat-label>
+              <input matInput formControlName="modelo" appCurrencyMask type="text" />
+              <mat-error>
+                <error-message [control]="form.modelo" nomCampo="Modelo"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
             <mat-form-field appearance="outline">
               <mat-label>Tamaño Lote</mat-label>
               <input matInput formControlName="lote" appCurrencyMask type="text" />
@@ -169,14 +199,59 @@
             </mat-form-field>
           </div>
 
-          <div class="form-cell-3">
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Etiquetas</mat-label>
+              <input matInput formControlName="etiquetas" appCurrencyMask type="text" />
+              <mat-error>
+                <error-message [control]="form.etiquetas" nomCampo="Etiquetas"></error-message>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
             <mat-form-field appearance="outline">
               <mat-label>Presentaci&oacute;n</mat-label>
               <input matInput formControlName="presentacion" appCurrencyMask type="text" />
             </mat-form-field>
           </div>
 
-          <div class="form-cell-3">
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>País Origen</mat-label>
+              <input matInput formControlName="pais" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Base</mat-label>
+              <input matInput formControlName="base" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Altura</mat-label>
+              <input matInput formControlName="altura" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>Diametro</mat-label>
+              <input matInput formControlName="diametro" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <div class="form-cell-2">
+            <mat-form-field appearance="outline">
+              <mat-label>S.P.E.</mat-label>
+              <input matInput formControlName="spe" appCurrencyMask type="text" />
+            </mat-form-field>
+          </div>
+
+          <!--div class="form-cell-3">
             <mat-form-field appearance="outline">
               <mat-label>Medidas</mat-label>
               <input matInput formControlName="medidas" appCurrencyMask type="text" />
@@ -188,7 +263,7 @@
               <mat-label>Agrupaci&oacute;n</mat-label>
               <input matInput formControlName="agrupacion" appCurrencyMask type="text" />
             </mat-form-field>
-          </div>
+          </div-->
 
           <div class="form-cell-4" *ngIf="isEdit">
               <button matTooltip="Exportar" class="export-pdf" mat-fab extended (click)="downloadFile(0)">
@@ -228,7 +303,7 @@
               </td>
             </ng-container>
 
-            <ng-container *ngIf="form.tipoServicio.value == 1" matColumnDef="SubFolio">
+            <ng-container *ngIf="form.idServicio.value == 1" matColumnDef="SubFolio">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>SubFolio</th>
               <td mat-cell *matCellDef="let element"> {{element.FolioSub}} </td>
             </ng-container>
@@ -268,7 +343,7 @@
               <td mat-cell *matCellDef="let element"> {{element.Pais}} </td>
             </ng-container>
 
-            <ng-container *ngIf="form.tipoServicio.value == 1" matColumnDef="Fraccion">
+            <ng-container *ngIf="form.idServicio.value == 1" matColumnDef="Fraccion">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Fracci&oacute;n</th>
               <td mat-cell *matCellDef="let element"> {{element.Fraccion}} </td>
             </ng-container>

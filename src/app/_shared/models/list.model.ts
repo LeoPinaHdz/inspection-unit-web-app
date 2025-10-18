@@ -25,6 +25,16 @@ export interface List {
     idPresentacion?: number;
     listasDetalle?: ListDetail[];
     listasPunto?: ListPoint[];
+    producto?: string;
+    marca?: string;
+    modelo?: string;
+    pais?: string;
+    base?: string;
+    altura?: string;
+    diametro?: string;
+    spe?: string;
+    etiquetas?: number;
+    idServicio?: number;
 }
 
 export interface ListDetail {

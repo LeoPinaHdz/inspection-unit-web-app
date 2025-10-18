@@ -15,5 +15,6 @@ export interface StandardSpec {
     idNormaPunto: number,
     idNorma?: number,
     punto: number,
-    contenido?: string
+    contenido?: string,
+    idServicio?: number
 }

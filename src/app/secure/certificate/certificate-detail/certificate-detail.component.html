@@ -98,6 +98,36 @@
                         </mat-form-field>
                     </div>
                     <div class="form-cell-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Tamaño del Lote</mat-label>
+                            <input matInput formControlName="lote" type="text" required />
+                            <mat-error>
+                                <error-message [control]="form.lote"
+                                    nomCampo="Tamaño del Lote"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-cell-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Tamaño de la Muestra</mat-label>
+                            <input matInput formControlName="muestra" type="text" required />
+                            <mat-error>
+                                <error-message [control]="form.muestra"
+                                    nomCampo="Tamaño de la Muestra"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-cell-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Factura</mat-label>
+                            <input matInput formControlName="factura" type="text" required />
+                            <mat-error>
+                                <error-message [control]="form.factura"
+                                    nomCampo="Factura"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!--div class="form-cell-3">
                         <mat-label>Verificación del lote</mat-label>
                         <br>
                         <mat-radio-group formControlName="tipoLote">
@@ -144,7 +174,7 @@
                                     nomCampo="Estado del instrumento de medición"></error-message>
                             </mat-error>
                         </mat-form-field>
-                    </div>
+                    </div-->
                     <div class="form-cell-3">
                         <mat-form-field appearance="outline">
                             <mat-label>Inspector</mat-label>
@@ -165,6 +195,26 @@
                                 cdkAutosizeMaxRows="4" required></textarea>
                             <mat-error>
                                 <error-message nomCampo="Observaciones"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-cell-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Manifiesto</mat-label>
+                            <input matInput formControlName="manifiesto" type="text" required />
+                            <mat-error>
+                                <error-message [control]="form.manifiesto"
+                                    nomCampo="Manifiesto"></error-message>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-cell-6">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Resultado de la Inspección</mat-label>
+                            <input matInput formControlName="resultado" type="text" required />
+                            <mat-error>
+                                <error-message [control]="form.resultado"
+                                    nomCampo="Resultado de la Inspección"></error-message>
                             </mat-error>
                         </mat-form-field>
                     </div>

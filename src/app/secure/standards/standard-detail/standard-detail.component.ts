@@ -17,7 +17,7 @@ import * as XLSX from 'xlsx';
 export class StandardDetailComponent implements OnInit, OnDestroy {
   id: any;
   isEdit = false;
-  displayedColumns: string[] = ['punto', 'contenido', 'actions'];
+  displayedColumns: string[] = ['punto', 'servicio', 'contenido', 'actions'];
   selectedSpec?: StandardSpec;
   standardSpecs: StandardSpec[] = [];
   dataSource: MatTableDataSource<StandardSpec> = new MatTableDataSource();
@@ -59,6 +59,7 @@ export class StandardDetailComponent implements OnInit, OnDestroy {
 
     this.standardSpecForm = new FormGroup({
       punto: new FormControl({ value: '', disabled: true }, []),
+      idServicio: new FormControl('0', [Validators.required]),
       contenido: new FormControl('', [Validators.required])
     });
 
@@ -104,7 +105,8 @@ export class StandardDetailComponent implements OnInit, OnDestroy {
     this.initDetailsTable(this.standardSpecs);
     this.standardSpecForm.patchValue({
       punto: spec.punto,
-      contenido: spec.contenido
+      contenido: spec.contenido,
+      idServicio: spec.idServicio
     });
   }
 
@@ -139,6 +141,7 @@ export class StandardDetailComponent implements OnInit, OnDestroy {
     if (this.isEdit && this.selectedSpec) {
       this.selectedSpec.punto = spec.punto;
       this.selectedSpec.contenido = spec.contenido;
+      this.selectedSpec.idServicio = spec.idServicio
 
       this.standardSpecs.push(this.selectedSpec);
     } else {
@@ -215,14 +218,15 @@ export class StandardDetailComponent implements OnInit, OnDestroy {
       const workbook = XLSX.read(data, { type: 'array' });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
-      const specs = XLSX.utils.sheet_to_json(worksheet, { header: 1 }).map((row: any) => row[0]);
+      const specs = XLSX.utils.sheet_to_json(worksheet, { header: 1 }).map((row: any) => {return {idServicio: row[0], contenido: row[1]};});
       this.standardSpecs = [];
 
-      specs.filter(spec => spec && spec.trim() !== '').forEach(contenido => {
+      specs.filter(spec => spec.contenido && spec.contenido?.trim() !== '').forEach(row => {
+        console.log(row);
         const idNormaPunto = 0;
         const punto = this.standardSpecs.length + 1;
 
-        this.standardSpecs.push({ idNormaPunto, punto, contenido });
+        this.standardSpecs.push({ idNormaPunto, punto, contenido: row.contenido, idServicio: row.idServicio });
       })
       this.selectedSpec = undefined;
       this.initDetailsTable(this.standardSpecs, true);
