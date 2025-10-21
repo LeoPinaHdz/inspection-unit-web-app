@@ -1,7 +1,7 @@
 <mat-card>
     <mat-card-content>
         <div class="form-container">
-            <upload-button accept=".csv" buttonTitle="Adjuntar" (fileChange)="submitFile($event)"></upload-button>
+            <upload-button accept=".xls, .xlsx" buttonTitle="Adjuntar" (fileChange)="submitFile($event)"></upload-button>
             <button *ngIf="references.length > 0" class="form-button no-left-margin" color="primary" (click)="clear()" mat-fab extended>
                 Limpiar
             </button>

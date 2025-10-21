@@ -46,7 +46,7 @@ export class OrderServicesComponent implements OnInit {
       fechaDel: new FormControl('', []),
       fechaAl: new FormControl('', []),
       idCliente: new FormControl('', [Validators.required]),
-      idBodega: new FormControl('', [Validators.required]),
+      idBodega: new FormControl(''),
       cancelados: new FormControl(false, []),
     });
 

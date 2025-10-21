@@ -60,7 +60,7 @@ export class PendingSalesOrderComponent implements OnInit {
       fechaDel: new FormControl('', []),
       fechaAl: new FormControl('', []),
       idCliente: new FormControl('', [Validators.required]),
-      idBodega: new FormControl('', [Validators.required]),
+      idBodega: new FormControl(''),
       pendientes: new FormControl(true, []),
     });
 
