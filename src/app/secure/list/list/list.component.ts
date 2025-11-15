@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
       fechaDel: new FormControl('', []),
       fechaAl: new FormControl('', []),
       pedimento: new FormControl('', []),
-      lista: new FormControl('', []),
+      idSolicitud: new FormControl('', []),
     });
 
     this.standardService.getAllActive()
@@ -97,6 +97,10 @@ export class ListComponent implements OnInit, OnDestroy {
     request.fechaAl = request.fechaAl ? formatDateString(request.fechaAl) : '';
     request.idCliente = request.cliente || 0;
     request.norma = request.norma || 0;
+
+    if (!request.idSolicitud) {
+      delete request['idSolicitud'];
+    }
 
     this.listService.search(request).
       pipe()

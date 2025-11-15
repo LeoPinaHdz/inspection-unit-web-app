@@ -39,9 +39,9 @@ export class ListDetailComponent implements OnInit, OnDestroy {
   allExecutives: any[] = [];
   referenceDetails: any[] = [];
   standardPoints: any[] = [];
-  displayedColumns: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Saldo'];
-  displayedColumnsType0: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Saldo'];
-  displayedColumnsType1: string[] = ['select', 'SubFolio', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Etiquetas', 'Pais', 'Fraccion', 'Saldo'];
+  displayedColumns: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Pais', 'Saldo', 'Parcial'];
+  displayedColumnsType0: string[] = ['select', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Pais', 'Saldo', 'Parcial'];
+  displayedColumnsType1: string[] = ['select', 'SubFolio', 'Marca', 'Producto', 'Modelo', 'UMC', 'Cantidad', 'Pais', 'Fraccion', 'Saldo', 'Parcial'];
   displayedColumnsStandard: string[] = ['contenido', 'dictaminacion', 'observaciones'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -195,6 +195,15 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       });
   }
 
+  validateQty(detail: any): void {
+    if (detail.parcial! > detail.Saldo! || detail.parcial! <= 0) {
+      detail.showError = true;
+      detail.parcial = undefined;
+    } else {
+      detail.showError = false;
+    }
+  }
+
   loadRequestDetail() {
     this.referenceDetails = [];
     this.dataSource = new MatTableDataSource(this.referenceDetails);
@@ -231,7 +240,7 @@ export class ListDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.executives = response;
-          if (this.executives.length > 0) this.listForm.get('idEjecutivo')!.setValue(this.executives[0].idEjecutivo);
+          if (this.executives.length > 0 && !this.id) this.listForm.get('idEjecutivo')!.setValue(this.executives[0].idEjecutivo);
         },
         error: () => {
           console.error('Error trying to get executives');
@@ -284,7 +293,13 @@ export class ListDetailComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.listForm.markAllAsTouched();
-    if (!this.listForm.valid || this.selection.isEmpty()) return;
+    const pending = this.selection.selected.filter(d => !d.parcial);
+
+    pending.forEach(d => {
+      d.showError = true;
+    });
+
+    if (!this.listForm.valid || this.selection.isEmpty() || pending.length) return;
 
     let request = { ...this.list, ...this.listForm.getRawValue() };
 
@@ -296,7 +311,8 @@ export class ListDetailComponent implements OnInit, OnDestroy {
         idFolioDetalle: request.idServicio == 0 ? 0 : r.IdFolioDetalle,
         idSolicitudDetalle: request.idServicio == 1 ? 0 : r.IdSolicitudDetalle,
         cantidad: r.Cantidad,
-        idEstatus: request.idEstatus
+        idEstatus: request.idEstatus,
+        parcial: r.parcial
       };
     });
 
@@ -339,12 +355,12 @@ export class ListDetailComponent implements OnInit, OnDestroy {
     this.list = list;
     this.listForm.patchValue(list);
     this.listForm.patchValue({
-      idServicio: list.idServicio ? '1' : '0'
+      idServicio: list.tipoServicio ? '1' : '0'
     });
 
     this.requests = [{ idSolicitud: list.idSolicitud || 0, clave: list.claveSolicitud, idNorma: list.idNorma }];
     this.result = list.dictaminacion || 'C';
-    this.displayedColumns = list.idServicio ? this.displayedColumnsType1 : this.displayedColumnsType0;
+    this.displayedColumns = list.tipoServicio ? this.displayedColumnsType1 : this.displayedColumnsType0;
 
     if (this.result === 'NC') {
       this.resultText = 'No Cumple';
@@ -387,6 +403,13 @@ export class ListDetailComponent implements OnInit, OnDestroy {
     this.selection.toggle(row);
 
     this.updateLoteNew();
+  }
+
+  showInput(row?: any): boolean {
+    if (!row) {
+      return false;
+    }
+    return this.selection.isSelected(row);
   }
 
   checkboxLabel(row?: any): string {

@@ -62,7 +62,7 @@ export class SalesOrderDetailComponent implements OnInit, OnDestroy {
     this.formSalesOrder = new FormGroup({
       idOrdenVenta: new FormControl({ value: '', disabled: true }, [Validators.required]),
       idCliente: new FormControl({ value: '', disabled: this.salesOrderId }, [Validators.required]),
-      idBodega: new FormControl({ value: '', disabled: this.salesOrderId }, [Validators.required]),
+      idBodega: new FormControl({ value: '', disabled: this.salesOrderId }),
       fFactura: new FormControl(new Date(), [Validators.required]),
       referencia: new FormControl('', []),
     });
@@ -311,6 +311,8 @@ export class SalesOrderDetailComponent implements OnInit, OnDestroy {
 
     const salesOrder: SalesOrder = { ...this.salesOrder, ...this.formSalesOrder.getRawValue()};
 
+    delete salesOrder['idBodega'];
+    
     if (!this.isEdit) {
       const selectedClient = this.clients.filter(c => c.idCliente === salesOrder.idCliente)[0];
 

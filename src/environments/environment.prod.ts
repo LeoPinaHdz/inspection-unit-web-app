@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  url: 'https://logisticswebapi.azurewebsites.net/api/',
-  urlDocuments: 'https://localhost:63633/api/'
+  url: 'http://205.209.100.194:7278/api/',
+  urlDocuments: 'http://205.209.100.194:7279/api/'
 };

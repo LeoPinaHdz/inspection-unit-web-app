@@ -39,7 +39,7 @@ export class FeeDetailComponent implements OnInit {
     this.formFee = new FormGroup({
       idCuota: new FormControl({ value: '', disabled: true }, [Validators.required]),
       idCliente: new FormControl({ value: '', disabled: this.feeId }, [Validators.required]),
-      idBodega: new FormControl({ value: '', disabled: this.feeId }, [Validators.required]),
+      idBodega: new FormControl({ value: '', disabled: this.feeId }),
       idServicio: new FormControl('', [Validators.required]),
       fVigenciaIni: new FormControl(new Date(), [Validators.required]),
       fVigenciaFin: new FormControl(addYears(new Date(), 5), [Validators.required]),
@@ -146,7 +146,8 @@ export class FeeDetailComponent implements OnInit {
     if (!this.formFee.valid) return;
 
     const fee: Fee = { ...this.fee, ...this.formFee.getRawValue() };
-
+    delete fee['idBodega'];
+    
     this.feeService.save(fee)
       .pipe()
       .subscribe({

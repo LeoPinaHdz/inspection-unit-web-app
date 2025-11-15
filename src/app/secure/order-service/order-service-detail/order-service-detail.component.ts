@@ -57,7 +57,7 @@ export class OrderServiceDetailComponent implements OnInit {
     this.formOrderService = new FormGroup({
       idOrdenServicio: new FormControl({ value: '', disabled: true }, [Validators.required]),
       idCliente: new FormControl({ value: '', disabled: this.orderServiceId }, [Validators.required]),
-      idBodega: new FormControl({ value: '', disabled: this.orderServiceId }, [Validators.required]),
+      idBodega: new FormControl({ value: '', disabled: this.orderServiceId }),
       fServicio: new FormControl(new Date(), [Validators.required]),
       observaciones: new FormControl('', []),
     });
@@ -267,6 +267,8 @@ export class OrderServiceDetailComponent implements OnInit {
 
     orderService.detalle = this.orderServiceDetails;
 
+    delete orderService['idBodega'];
+    
     this.orderServiceService.save(orderService)
       .pipe()
       .subscribe({

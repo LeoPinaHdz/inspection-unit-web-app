@@ -93,7 +93,6 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
 
     try {
       this.standards = await lastValueFrom(this.standardService.getAllActive());
-      if (this.standards.length > 0) this.letterForm.get('idNorma')!.setValue(this.standards[0].idNorma);
 
       this.letterForm.get('idNorma')!.valueChanges
         .pipe(takeUntil(this._onDestroy))
@@ -101,6 +100,7 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
           this.loadRequests();
           this.loadExecutive();
         });
+      if (this.standards.length > 0) this.letterForm.get('idNorma')!.setValue(this.standards[0].idNorma);
     } catch (error) {
       console.error('Error trying to get standards');
     }
@@ -231,7 +231,7 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.dialog.open(SimpleDialogComponent, {
-            data: { type: 'success', message: `El oficio ${request.idOficio} fue guardado con éxito` },
+            data: { type: 'success', message: `El oficio ${this.formatWithLeadingZeros(response)} fue guardado con éxito` },
           })
             .afterClosed()
             .subscribe((confirmado: Boolean) => {
@@ -245,6 +245,10 @@ export class CreateLetterComponent implements OnInit, OnDestroy {
           console.error('Error trying to save letters');
         }
       });
+  }
+
+  formatWithLeadingZeros(param: any) {
+    return param.folio ? param.folio.toString().padStart(5, '0') : param.idOficio;
   }
 
   updateForm(letter: Letter): void {

@@ -291,7 +291,7 @@ export class CreateRequestComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.dialog.open(SimpleDialogComponent, {
-            data: { type: 'success', message: `La solicitud ${request.idSolicitud} fue guardada con éxito` },
+            data: { type: 'success', message: `La solicitud ${response.clave || response.idSolicitud} fue guardada con éxito` },
           })
             .afterClosed()
             .subscribe((confirmado: Boolean) => {

@@ -11,7 +11,7 @@
         <div class="form-cell-3">
           <mat-form-field appearance="outline">
             <mat-label>No. Lista</mat-label>
-            <input matInput formControlName="lista" type="text" />
+            <input matInput formControlName="idSolicitud" type="text" />
           </mat-form-field>
         </div>
 
@@ -104,7 +104,7 @@
       </ng-container>
 
       <ng-container matColumnDef="estatus">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Inspección </mat-header-cell>
         <mat-cell *matCellDef="let row"> {{ row.Estatus }} </mat-cell>
       </ng-container>
 

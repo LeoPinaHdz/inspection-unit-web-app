@@ -193,7 +193,7 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.dialog.open(SimpleDialogComponent, {
-            data: { type: 'success', message: `Acta ${this.isEdit ? certificateRequest.folio : ''} guardada con éxito` },
+            data: { type: 'success', message: `Acta ${this.formatWithLeadingZeros(response)} guardada con éxito` },
           })
             .afterClosed()
             .subscribe((confirmado: Boolean) => {
@@ -207,6 +207,10 @@ export class CertificateDetailComponent implements OnInit, OnDestroy {
           console.error('Error trying to save certificate');
         }
       });
+  }
+
+  formatWithLeadingZeros(param: any) {
+    return param.folio ? param.folio.toString().padStart(5, '0') : param.idActa;
   }
 
   downloadFile(type: number): void {
